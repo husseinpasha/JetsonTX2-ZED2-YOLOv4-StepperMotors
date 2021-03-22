@@ -9,52 +9,47 @@ def id_list_maker():
 
     file1 = open('/home/jetson/darknet/pos.txt', 'r+')
 
-    while count<100:
-        size1 = os.path.getsize('/home/jetson/darknet/pos.txt')
+    num_lines = sum(1 for line in open('/home/jetson/darknet/pos.txt')) # each time that the numerb of lines are calulated the cursor goes to the end of the text file. So I open the file separately for line reading and line counting
+    print('num_lines: ',num_lines)
 
-        if size1>size0: #to make sure that a new line is written to the txt file
-            lines = file1.readline()
-            line = lines.strip()
-            new_pos = list(line.split()) 
-            X = float(new_pos[0])
-            Y = float(new_pos[1])
-            Z = float(new_pos[2])
-            A = int(new_pos[3])
+    line_number = num_lines-1  # setting to the last line of the text file at the moment
 
-            if -10<X<10 and -10<Y<10 and -10<Z<10:    # to avoid 'inf' and 'nan' elements in id_list                
-                # size0 = size1
-                id_list.append([X,Y,Z])
+    lines = file1.readlines() # reading the text 
 
-            count+=1
+    while count<300: # count indicates the number of lines that will be read from the txt file
+            
+        new_pos = list(lines[line_number].split()) 
+        # print('New Positions', new_pos)
+        X = float(new_pos[0])
+        Y = float(new_pos[1])
+        Z = float(new_pos[2])
+        A = int(new_pos[3])
 
-        else:
-            time.sleep(0.001)
+        if -10<X<10 and -10<Y<10 and -10<Z<10:    # to avoid 'inf' and 'nan' elements in id_list                
+            id_list.append([X,Y,Z])
+
+        count+=1
+        line_number -= 1
+        # print(count)
 
 
-    # file1.truncate(0) # clean the text file up
 
-
-    # file1.close() 
-
-    # print ("length of id_list: ", len(id_list))
-    # print ('id_list: ', id_list)
-
-    # making a list of must-remove elements
     chcecklist=[]
     for i in range (len(id_list)):
         for j in range(i+1, len(id_list)):
             # print('itereation i', i)
             # print('itereation j', j)
             if  (
-            abs(id_list[i][0]-id_list[j][0]) < 0.10 and
-            abs(id_list[i][1]-id_list[j][1]) < 0.10 and
-            abs(id_list[i][2]-id_list[j][2]) < 0.10 
+            abs(id_list[i][0]-id_list[j][0]) < 0.30 and
+            abs(id_list[i][1]-id_list[j][1]) < 0.30 and
+            abs(id_list[i][2]-id_list[j][2]) < 0.30 
             ): 
                 if i not in chcecklist:  # avoid dulicated appending
                     chcecklist.append(i)
 
     # print('old', id_list)
     # print("checklist: ", chcecklist)
+
     # removing the must-remove elements from id_list
     cnt = 0
     for ele in chcecklist:
@@ -79,3 +74,5 @@ def best_id_finder(): # sort the ids based on area and return the id that has la
     # Z_obj = id_list[0][2]
 
     # return [X_obj, Y_obj, Z_obj]
+
+id_list_maker()
