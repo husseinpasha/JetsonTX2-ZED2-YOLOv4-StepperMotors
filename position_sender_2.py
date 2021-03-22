@@ -1,3 +1,4 @@
+# in this script the postions are being read from the end of the text file. So the most fresh points are being sent out. 
 def id_list_maker():
     import time
     import os
