@@ -1,4 +1,3 @@
-# in this script the postions are being read from the end of the text file. So the most fresh points are being sent out. 
 def id_list_maker():
     import time
     import os
@@ -17,7 +16,7 @@ def id_list_maker():
 
     lines = file1.readlines() # reading the text 
 
-    while count<300: # count indicates the number of lines that will be read from the txt file
+    while count<200: # count indicates the number of lines that will be read from the txt file
             
         new_pos = list(lines[line_number].split()) 
         # print('New Positions', new_pos)
@@ -31,7 +30,9 @@ def id_list_maker():
 
         count+=1
         line_number -= 1
-        # print(count)
+
+    # revese the id list to get the latest positions while appending in the next step
+    id_list = id_list[::-1]
 
 
 
